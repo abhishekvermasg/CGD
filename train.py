@@ -131,7 +131,7 @@ if __name__ == '__main__':
     else: 
         class_criterion = LabelSmoothingCrossEntropyLoss(smoothing=smoothing, temperature=temperature)
     if opt.class_loss == 'arcface':
-        optimizer = optim.Adam([{'params': model.parameters()}, {'params': class_criterion.parameters()}], lr=3e-4)
+        optimizer = Adam([{'params': model.parameters()}, {'params': class_criterion.parameters()}], lr=3e-4)
     else:
         optimizer = Adam(model.parameters(), lr=1e-4)
     # lr_scheduler = MultiStepLR(optimizer, milestones=[int(0.6 * num_epochs), int(0.8 * num_epochs)], gamma=0.1)
