@@ -14,9 +14,9 @@ from model import Model, set_bn_eval
 from utils import recall, LabelSmoothingCrossEntropyLoss, BatchHardTripletLoss, ImageReader, MPerClassSampler
 
 torch.backends.cudnn.benchmark = True
-torch.autograd.set_detect_anomaly(False)
-torch.autograd.profiler.profile(False)
-torch.autograd.profiler.emit_nvtx(False)
+torch.autograd.set_detect_anomaly(True)
+torch.autograd.profiler.profile(True)
+torch.autograd.profiler.emit_nvtx(True)
 
 def train(net, optim, loss_type=None):
     net.train()
