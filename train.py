@@ -134,7 +134,7 @@ if __name__ == '__main__':
     print('# Model Params: {} FLOPs: {}'.format(params, flops))
     if opt.class_loss == 'arcface':
         class_criterion = losses.ArcFaceLoss(num_classes=len(train_data_set.class_to_idx), \
-            embedding_size=512)
+            embedding_size=512, reducer=reducers.ThresholdReducer(low=0.1))
     elif opt.class_loss == 'contra':
         distance = distances.CosineSimilarity()
         class_criterion = losses.ContrastiveLoss(distance=distance)
