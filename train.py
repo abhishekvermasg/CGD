@@ -28,7 +28,7 @@ def train(net, optim, loss_type=None):
         features, classes = net(inputs)
         if loss_type == 'arcface':
             class_loss = class_criterion(features, labels)
-            print(class_loss)
+            # print(class_loss)
         else:
             class_loss = class_criterion(classes, labels)
         feature_loss = feature_criterion(features, labels)
