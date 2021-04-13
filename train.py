@@ -28,6 +28,7 @@ def train(net, optim, loss_type=None):
         features, classes = net(inputs)
         if loss_type == 'arcface':
             class_loss = class_criterion(features, labels)
+            print(class_loss)
         else:
             class_loss = class_criterion(classes, labels)
         feature_loss = feature_criterion(features, labels)
@@ -142,6 +143,7 @@ if __name__ == '__main__':
     else: 
         class_criterion = LabelSmoothingCrossEntropyLoss(smoothing=smoothing, temperature=temperature)
     if opt.class_loss == 'arcface':
+        print('Using ArcFace')
         optimizer = Adam([{'params': model.parameters()}, {'params': class_criterion.parameters()}], lr=3e-4)
     else:
         optimizer = Adam(model.parameters(), lr=1e-4)
