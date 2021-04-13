@@ -98,6 +98,7 @@ if __name__ == '__main__':
     parser.add_argument('--data_dir', default='../input/shopee-product-matching/train_images/',\
      type=str, help='train images folder')
     parser.add_argument('--warmup_epochs', default=2, type=int, help='number of warmup epochs')
+    parser.add_argument('--workers', default=2, type=int, help='number of workers')
 
 
     opt = parser.parse_args()
@@ -119,9 +120,9 @@ if __name__ == '__main__':
     # dataset loader
     train_data_set = ImageReader(data_path, data_name, 'train')
     train_sample = MPerClassSampler(train_data_set.labels, batch_size)
-    train_data_loader = DataLoader(train_data_set, batch_sampler=train_sample, num_workers=8, pin_memory=True)
+    train_data_loader = DataLoader(train_data_set, batch_sampler=train_sample, num_workers=opt.workers, pin_memory=True)
     test_data_set = ImageReader(data_path, data_name, 'test')
-    test_data_loader = DataLoader(test_data_set, batch_size, shuffle=False, num_workers=8, pin_memory=True)
+    test_data_loader = DataLoader(test_data_set, batch_size, shuffle=False, num_workers=opt.workers, pin_memory=True)
     eval_dict = {'test': {'data_loader': test_data_loader}}
 
     # model setup, model profile, optimizer config and loss definition
