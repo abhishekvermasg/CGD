@@ -13,6 +13,11 @@ from pytorch_metric_learning import losses, miners, distances, reducers, testers
 from model import Model, set_bn_eval
 from utils import recall, LabelSmoothingCrossEntropyLoss, BatchHardTripletLoss, ImageReader, MPerClassSampler
 
+torch.backends.cudnn.benchmark = True
+torch.autograd.set_detect_anomaly(False)
+torch.autograd.profiler.profile(False)
+torch.autograd.profiler.emit_nvtx(False)
+
 def train(net, optim, loss_type=None):
     net.train()
     # fix bn on backbone network
@@ -27,7 +32,7 @@ def train(net, optim, loss_type=None):
             class_loss = class_criterion(classes, labels)
         feature_loss = feature_criterion(features, labels)
         loss = class_loss + feature_loss
-        optim.zero_grad()
+        optim.zero_grad(set_to_none=True)
         loss.backward()
         optim.step()
         pred = torch.argmax(classes, dim=-1)
@@ -114,9 +119,9 @@ if __name__ == '__main__':
     # dataset loader
     train_data_set = ImageReader(data_path, data_name, 'train')
     train_sample = MPerClassSampler(train_data_set.labels, batch_size)
-    train_data_loader = DataLoader(train_data_set, batch_sampler=train_sample, num_workers=8)
+    train_data_loader = DataLoader(train_data_set, batch_sampler=train_sample, num_workers=8, pin_memory=True)
     test_data_set = ImageReader(data_path, data_name, 'test')
-    test_data_loader = DataLoader(test_data_set, batch_size, shuffle=False, num_workers=8)
+    test_data_loader = DataLoader(test_data_set, batch_size, shuffle=False, num_workers=8, pin_memory=True)
     eval_dict = {'test': {'data_loader': test_data_loader}}
 
     # model setup, model profile, optimizer config and loss definition
