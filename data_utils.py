@@ -9,12 +9,13 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import StratifiedKFold, GroupKFold
 
-def process_sop_data():
+def process_sop_data(data_dir, df_path):
     train_images, test_images = {}, {}
     data_tuple = {'train': train_images, 'test': test_images}
     data_dir = '../input/shopee-product-matching/train_images/'
 
     df_train = pd.read_csv('../input/shopee-clean/train_90.csv')
+    df_train = pd.read_csv(df_path)
     df_train = df_train.drop_duplicates(subset=['image'])
     df_train['file_path'] = df_train.image.apply(lambda x: os.path.join(data_dir, x))
     le = LabelEncoder()

@@ -12,7 +12,6 @@ from data_utils import process_sop_data
 from model import Model, set_bn_eval
 from utils import recall, LabelSmoothingCrossEntropyLoss, BatchHardTripletLoss, ImageReader, MPerClassSampler
 
-
 def train(net, optim):
     net.train()
     # fix bn on backbone network
@@ -68,6 +67,7 @@ if __name__ == '__main__':
     parser.add_argument('--data_path', default='/home/data', type=str, help='datasets path')
     parser.add_argument('--data_name', default='car', type=str, choices=['car', 'cub', 'sop', 'isc'],
                         help='dataset name')
+    parser.add_argument('--cuda', default=True, type=bool, help='gpu')
     parser.add_argument('--backbone_type', default='resnet50', type=str, choices=['resnet50', 'resnext50'],
                         help='backbone network type')
     parser.add_argument('--gd_config', default='SG', type=str,
@@ -81,11 +81,17 @@ if __name__ == '__main__':
     parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
     parser.add_argument('--batch_size', default=128, type=int, help='train batch size')
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
+    parser.add_argument('--df_path', default='../input/shopee-clean/train_90.csv',\
+     type=str, help='train df path')
+    parser.add_argument('--data_dir', default='../input/shopee-product-matching/train_images/',\
+     type=str, help='train images folder')
+
 
     opt = parser.parse_args()
     # args parse
     data_path, data_name, backbone_type = opt.data_path, opt.data_name, opt.backbone_type
     gd_config, feature_dim, smoothing, temperature = opt.gd_config, opt.feature_dim, opt.smoothing, opt.temperature
+    gpu = opt.cuda
     margin, recalls, batch_size = opt.margin, [int(k) for k in opt.recalls.split(',')], opt.batch_size
     num_epochs = opt.num_epochs
     save_name_pre = '{}_{}_{}_{}_{}_{}_{}_{}'.format(data_name, backbone_type, gd_config, feature_dim,
