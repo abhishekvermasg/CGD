@@ -7,6 +7,7 @@ from torch.optim import Adam
 from torch.optim.lr_scheduler import MultiStepLR
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+from data_utils import process_sop_data
 
 from model import Model, set_bn_eval
 from utils import recall, LabelSmoothingCrossEntropyLoss, BatchHardTripletLoss, ImageReader, MPerClassSampler
@@ -93,6 +94,8 @@ if __name__ == '__main__':
     results = {'train_loss': [], 'train_accuracy': []}
     for recall_id in recalls:
         results['test_recall@{}'.format(recall_id)] = []
+
+    process_sop_data()
 
     # dataset loader
     train_data_set = ImageReader(data_path, data_name, 'train')
