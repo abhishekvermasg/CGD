@@ -8,6 +8,7 @@ from torch.optim.lr_scheduler import MultiStepLR
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from data_utils import process_sop_data
+from pytorch_metric_learning import losses, miners, distances, reducers, testers
 
 from model import Model, set_bn_eval
 from utils import recall, LabelSmoothingCrossEntropyLoss, BatchHardTripletLoss, ImageReader, MPerClassSampler
@@ -77,12 +78,15 @@ if __name__ == '__main__':
     parser.add_argument('--smoothing', default=0.1, type=float, help='smoothing value for label smoothing')
     parser.add_argument('--temperature', default=0.5, type=float,
                         help='temperature scaling used in softmax cross-entropy loss')
+    parser.add_argument('--size', default=224, type=int, help='size of square image')
     parser.add_argument('--margin', default=0.1, type=float, help='margin of m for triplet loss')
     parser.add_argument('--recalls', default='1,2,4,8', type=str, help='selected recall')
     parser.add_argument('--batch_size', default=128, type=int, help='train batch size')
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
     parser.add_argument('--df_path', default='../input/shopee-clean/train_90.csv',\
      type=str, help='train df path')
+    parser.add_argument('--class_loss', default='ce', help='loss function for class labels')
+    parser.add_argument('--feature_loss', default='bhtl', help='loss function for features')
     parser.add_argument('--data_dir', default='../input/shopee-product-matching/train_images/',\
      type=str, help='train images folder')
 
@@ -116,9 +120,20 @@ if __name__ == '__main__':
     flops, params = profile(model, inputs=(torch.randn(1, 3, 224, 224).cuda(),), verbose=False)
     flops, params = clever_format([flops, params])
     print('# Model Params: {} FLOPs: {}'.format(params, flops))
-    optimizer = Adam(model.parameters(), lr=1e-4)
+    if opt.class_loss == 'arcface':
+        class_criterion = losses.ArcFaceLoss(num_classes=len(train_data_set.class_to_idx), embedding_size=512)
+    elif opt.class_loss == 'contra':
+        distance = distances.CosineSimilarity()
+        class_criterion = losses.ContrastiveLoss(distance=distance)
+    elif opt.class_loss = 'multi':
+        class_criterion = losses.MultiSimilarityLoss()
+    else: 
+        class_criterion = LabelSmoothingCrossEntropyLoss(smoothing=smoothing, temperature=temperature)
+    if opt.class_loss == 'arcface':
+        optimizer = optim.Adam([{'params': model.parameters()}, {'params': class_criterion.parameters()}], lr=1e-4)
+    else:
+        optimizer = Adam(model.parameters(), lr=1e-4)
     lr_scheduler = MultiStepLR(optimizer, milestones=[int(0.6 * num_epochs), int(0.8 * num_epochs)], gamma=0.1)
-    class_criterion = LabelSmoothingCrossEntropyLoss(smoothing=smoothing, temperature=temperature)
     feature_criterion = BatchHardTripletLoss(margin=margin)
 
     best_recall = 0.0
