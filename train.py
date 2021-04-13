@@ -13,10 +13,10 @@ from pytorch_metric_learning import losses, miners, distances, reducers, testers
 from model import Model, set_bn_eval
 from utils import recall, LabelSmoothingCrossEntropyLoss, BatchHardTripletLoss, ImageReader, MPerClassSampler
 
-# torch.backends.cudnn.benchmark = True
-# torch.autograd.set_detect_anomaly(True)
-# torch.autograd.profiler.profile(True)
-# torch.autograd.profiler.emit_nvtx(True)
+torch.backends.cudnn.benchmark = True
+torch.autograd.set_detect_anomaly(True)
+torch.autograd.profiler.profile(True)
+torch.autograd.profiler.emit_nvtx(True)
 
 def train(net, optim, loss_type=None):
     net.train()
