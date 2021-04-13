@@ -144,19 +144,19 @@ if __name__ == '__main__':
         class_criterion = LabelSmoothingCrossEntropyLoss(smoothing=smoothing, temperature=temperature)
     if opt.class_loss == 'arcface':
         print('Using ArcFace')
-        optimizer = Adam([{'params': model.parameters()}, {'params': class_criterion.parameters()}], lr=1e-5)
+        optimizer = Adam([{'params': model.parameters()}, {'params': class_criterion.parameters()}], lr=1e-4)
     else:
         optimizer = Adam(model.parameters(), lr=1e-4)
     # lr_scheduler = MultiStepLR(optimizer, milestones=[int(0.6 * num_epochs), int(0.8 * num_epochs)], gamma=0.1)
-    # lr_scheduler = MultiStepLR(optimizer, milestones=[int(0.6 * num_epochs), int(0.8 * num_epochs)], gamma=0.1)
-    lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, num_epochs)
+    lr_scheduler = MultiStepLR(optimizer, milestones=[int(0.6 * num_epochs), int(0.8 * num_epochs)], gamma=0.1)
+    # lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, num_epochs)
     feature_criterion = BatchHardTripletLoss(margin=margin)
 
     best_recall = 0.0
     for epoch in range(1, num_epochs + 1):
-        if epoch < opt.warmup_epochs + 1:
-            for g in optimizer.param_groups:
-                g['lr'] = g['lr'] / num_epochs
+        # if epoch < opt.warmup_epochs + 1:
+        #     for g in optimizer.param_groups:
+        #         g['lr'] = g['lr'] / num_epochs
         train_loss, train_accuracy = train(model, optimizer, loss_type='arcface')
         results['train_loss'].append(train_loss)
         results['train_accuracy'].append(train_accuracy)
