@@ -91,7 +91,7 @@ if __name__ == '__main__':
     parser.add_argument('--size', default=224, type=int, help='size of square image')
     parser.add_argument('--margin', default=0.1, type=float, help='margin of m for triplet loss')
     parser.add_argument('--recalls', default='10,25,50', type=str, help='selected recall')
-    parser.add_argument('--batch_size', default=32, type=int, help='train batch size') # 128
+    parser.add_argument('--batch_size', default=64, type=int, help='train batch size') # 128
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
     parser.add_argument('--df_path', default='../input/shopee-clean/train_90.csv',\
      type=str, help='train df path')
