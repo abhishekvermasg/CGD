@@ -83,14 +83,14 @@ if __name__ == '__main__':
     parser.add_argument('--gd_config', default='SG', type=str,
                         choices=['S', 'M', 'G', 'SM', 'MS', 'SG', 'GS', 'MG', 'GM', 'SMG', 'MSG', 'GSM'],
                         help='global descriptors config')
-    parser.add_argument('--feature_dim', default=1536, type=int, help='feature dim')
+    parser.add_argument('--feature_dim', default=512, type=int, help='feature dim') # 1536
     parser.add_argument('--smoothing', default=0.1, type=float, help='smoothing value for label smoothing')
     parser.add_argument('--temperature', default=0.5, type=float,
                         help='temperature scaling used in softmax cross-entropy loss')
     parser.add_argument('--size', default=224, type=int, help='size of square image')
     parser.add_argument('--margin', default=0.1, type=float, help='margin of m for triplet loss')
     parser.add_argument('--recalls', default='10,25,50', type=str, help='selected recall')
-    parser.add_argument('--batch_size', default=128, type=int, help='train batch size')
+    parser.add_argument('--batch_size', default=32, type=int, help='train batch size') # 128
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
     parser.add_argument('--df_path', default='../input/shopee-clean/train_90.csv',\
      type=str, help='train df path')
@@ -132,8 +132,8 @@ if __name__ == '__main__':
     flops, params = clever_format([flops, params])
     print('# Model Params: {} FLOPs: {}'.format(params, flops))
     if opt.class_loss == 'arcface':
-        class_criterion = losses.ArcFaceLoss(num_classes=len(train_data_set.class_to_idx), embedding_size=512,\
-         scale=20)
+        class_criterion = losses.ArcFaceLoss(num_classes=len(train_data_set.class_to_idx), \
+            embedding_size=512)
     elif opt.class_loss == 'contra':
         distance = distances.CosineSimilarity()
         class_criterion = losses.ContrastiveLoss(distance=distance)
