@@ -89,7 +89,7 @@ if __name__ == '__main__':
     parser.add_argument('--feature_loss', default='bhtl', help='loss function for features')
     parser.add_argument('--data_dir', default='../input/shopee-product-matching/train_images/',\
      type=str, help='train images folder')
-    parser.add_argumnet('--warmup_epochs', default=2, help='number of warmup epochs')
+    parser.add_argument('--warmup_epochs', default=2, help='number of warmup epochs')
 
 
     opt = parser.parse_args()
