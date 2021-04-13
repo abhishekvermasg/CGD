@@ -68,6 +68,7 @@ def test(net, recall_ids):
         desc += 'R@{}:{:.2f}% '.format(rank_id, acc_list[index] * 100)
         results['test_recall@{}'.format(rank_id)].append(acc_list[index] * 100)
     print(desc)
+    print()
     return acc_list[0]
 
 
@@ -131,7 +132,7 @@ if __name__ == '__main__':
     flops, params = clever_format([flops, params])
     print('# Model Params: {} FLOPs: {}'.format(params, flops))
     if opt.class_loss == 'arcface':
-        class_criterion = losses.ArcFaceLoss(num_classes=len(train_data_set.class_to_idx), embedding_size=512)
+        class_criterion = losses.ArcFaceLoss(num_classes=len(train_data_set.class_to_idx), embedding_size=512, scale=10)
     elif opt.class_loss == 'contra':
         distance = distances.CosineSimilarity()
         class_criterion = losses.ContrastiveLoss(distance=distance)
