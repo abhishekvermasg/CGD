@@ -154,9 +154,9 @@ if __name__ == '__main__':
 
     best_recall = 0.0
     for epoch in range(1, num_epochs + 1):
-        if epoch < opt.warmup_epochs + 1:
-            for g in optimizer.param_groups:
-                g['lr'] = g['lr'] / num_epochs
+        # if epoch < opt.warmup_epochs + 1:
+        #     for g in optimizer.param_groups:
+        #         g['lr'] = g['lr'] / num_epochs
         train_loss, train_accuracy = train(model, optimizer, loss_type='arcface')
         results['train_loss'].append(train_loss)
         results['train_accuracy'].append(train_accuracy)
