@@ -5,6 +5,7 @@ import torch
 from PIL import Image
 from scipy.io import loadmat
 from tqdm import tqdm
+import pandas as pd
 
 def process_sop_data():
     train_images, test_images = {}, {}
