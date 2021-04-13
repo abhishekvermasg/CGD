@@ -29,6 +29,7 @@ def process_sop_data():
     for data_type, image_list in data_tuple.items():
         for i in df_train.iterrows():
             label, img_name = i[1]['label_group'], i[1]['image']
+            save_name = img_name
             if label in image_list:
                 image_list[label].append(save_name)
             else:
