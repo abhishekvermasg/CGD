@@ -85,11 +85,11 @@ if __name__ == '__main__':
     parser.add_argument('--num_epochs', default=20, type=int, help='train epoch number')
     parser.add_argument('--df_path', default='../input/shopee-clean/train_90.csv',\
      type=str, help='train df path')
-    parser.add_argument('--class_loss', default='ce', help='loss function for class labels')
-    parser.add_argument('--feature_loss', default='bhtl', help='loss function for features')
+    parser.add_argument('--class_loss', default='ce', type=str, help='loss function for class labels')
+    parser.add_argument('--feature_loss', default='bhtl', type=str, help='loss function for features')
     parser.add_argument('--data_dir', default='../input/shopee-product-matching/train_images/',\
      type=str, help='train images folder')
-    parser.add_argument('--warmup_epochs', default=2, help='number of warmup epochs')
+    parser.add_argument('--warmup_epochs', default=2, type=int, help='number of warmup epochs')
 
 
     opt = parser.parse_args()
