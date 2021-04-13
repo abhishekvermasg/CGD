@@ -159,5 +159,5 @@ if __name__ == '__main__':
             data_base['test_images'] = test_data_set.images
             data_base['test_labels'] = test_data_set.labels
             data_base['test_features'] = eval_dict['test']['features']
-            torch.save(model.state_dict(), 'results/{}_model.pth'.format(save_name_pre))
-            torch.save(data_base, 'results/{}_data_base.pth'.format(save_name_pre))
+            torch.save(model.state_dict(), 'results/{}_model.pth'.format(epoch))
+            torch.save(data_base, 'results/{}_data_base.pth'.format(epoch))
