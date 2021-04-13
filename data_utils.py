@@ -43,7 +43,7 @@ def process_sop_data():
                 if label in test_images:
                     test_images[label].append(save_name)
                 else:
-                    test_images[label].append(save_name)
+                    test_images[label] = [save_name]
 
     torch.save({'train': train_images, 'test': test_images}, './data_dict.pth')
 
