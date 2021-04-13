@@ -126,7 +126,7 @@ if __name__ == '__main__':
     elif opt.class_loss == 'contra':
         distance = distances.CosineSimilarity()
         class_criterion = losses.ContrastiveLoss(distance=distance)
-    elif opt.class_loss = 'multi':
+    elif opt.class_loss == 'multi':
         class_criterion = losses.MultiSimilarityLoss()
     else: 
         class_criterion = LabelSmoothingCrossEntropyLoss(smoothing=smoothing, temperature=temperature)
