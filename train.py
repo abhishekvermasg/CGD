@@ -13,7 +13,7 @@ from pytorch_metric_learning import losses, miners, distances, reducers, testers
 from model import Model, set_bn_eval
 from utils import recall, LabelSmoothingCrossEntropyLoss, BatchHardTripletLoss, ImageReader, MPerClassSampler
 
-def train(net, optim):
+def train(net, optim, loss=None):
     net.train()
     # fix bn on backbone network
     net.apply(set_bn_eval)
@@ -21,7 +21,10 @@ def train(net, optim):
     for inputs, labels in data_bar:
         inputs, labels = inputs.cuda(), labels.cuda()
         features, classes = net(inputs)
-        class_loss = class_criterion(classes, labels)
+        if loss == 'arcface':
+            class_loss = class_criterion(features, labels)
+        else:
+            class_loss = class_criterion(classes, labels)
         feature_loss = feature_criterion(features, labels)
         loss = class_loss + feature_loss
         optim.zero_grad()
@@ -141,7 +144,7 @@ if __name__ == '__main__':
 
     best_recall = 0.0
     for epoch in range(1, num_epochs + 1):
-        train_loss, train_accuracy = train(model, optimizer)
+        train_loss, train_accuracy = train(model, optimizer, loss='arcface')
         results['train_loss'].append(train_loss)
         results['train_accuracy'].append(train_accuracy)
         rank = test(model, recalls)
