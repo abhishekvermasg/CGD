@@ -144,17 +144,17 @@ if __name__ == '__main__':
 
     best_recall = 0.0
     for epoch in range(1, num_epochs + 1):
+        if epoch < opt.warmup_epochs + 1:
+            for g in optimizer.param_groups:
+                g['lr'] = g['lr'] / num_epochs
         train_loss, train_accuracy = train(model, optimizer, loss_type='arcface')
         results['train_loss'].append(train_loss)
         results['train_accuracy'].append(train_accuracy)
         rank = test(model, recalls)
         lr_scheduler.step()
-        if epoch < opt.warmup_epochs + 1:
-            for g in optimizer.param_groups:
-                g['lr'] = g['lr'] / num_epochs
         # save statistics
         data_frame = pd.DataFrame(data=results, index=range(1, epoch + 1))
-        data_frame.to_csv('results/{}_statistics.csv'.format(save_name_pre), index_label='epoch')
+        data_frame.to_csv('results/{}_statistics.csv'.format(epoch), index_label='epoch')
         # save database and model
         data_base = {}
         if rank > best_recall:
