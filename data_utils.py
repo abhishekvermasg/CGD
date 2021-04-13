@@ -10,7 +10,7 @@ def process_sop_data():
     train_images, test_images = {}, {}
     data_tuple = {'train': train_images, 'test': test_images}
     
-    df_train = pd.read_csv('/content/train.csv')
+    df_train = pd.read_csv('../input/shopee-clean/train_90.csv')
     df_train = df_train.drop_duplicates(subset=['image'])
     df_train['file_path'] = df_train.image.apply(lambda x: os.path.join(data_dir, x))
     le = LabelEncoder()
