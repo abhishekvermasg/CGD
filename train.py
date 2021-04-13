@@ -150,7 +150,7 @@ if __name__ == '__main__':
         rank = test(model, recalls)
         lr_scheduler.step()
         if epoch < opt.warmup_epochs + 1:
-            for g in torch.optim.param_groups:
+            for g in optimizer.param_groups:
                 g['lr'] = g['lr'] / num_epochs
         # save statistics
         data_frame = pd.DataFrame(data=results, index=range(1, epoch + 1))
