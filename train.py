@@ -101,7 +101,7 @@ if __name__ == '__main__':
     for recall_id in recalls:
         results['test_recall@{}'.format(recall_id)] = []
 
-    process_sop_data()
+    process_sop_data(opt.data_dir, opt.df_path)
 
     # dataset loader
     train_data_set = ImageReader(data_path, data_name, 'train')
