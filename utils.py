@@ -10,11 +10,8 @@ from torchvision import transforms
 
 class ImageReader(Dataset):
 
-    def __init__(self, data_path, data_name, data_type, crop_type):
-        if crop_type == 'cropped' and data_name not in ['car', 'cub']:
-            raise NotImplementedError('cropped data only works for car or cub dataset')
-
-        data_dict = torch.load('{}/{}/{}_data_dicts.pth'.format(data_path, data_name, crop_type))[data_type]
+    def __init__(self, data_path, data_name, data_type):
+        data_dict = torch.load('./data_dict.pth')[data_type]
         self.class_to_idx = dict(zip(sorted(data_dict), range(len(data_dict))))
         normalize = transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         if data_type == 'train':
