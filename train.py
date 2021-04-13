@@ -130,10 +130,12 @@ if __name__ == '__main__':
     else: 
         class_criterion = LabelSmoothingCrossEntropyLoss(smoothing=smoothing, temperature=temperature)
     if opt.class_loss == 'arcface':
-        optimizer = optim.Adam([{'params': model.parameters()}, {'params': class_criterion.parameters()}], lr=1e-4)
+        optimizer = optim.Adam([{'params': model.parameters()}, {'params': class_criterion.parameters()}], lr=3e-4)
     else:
         optimizer = Adam(model.parameters(), lr=1e-4)
-    lr_scheduler = MultiStepLR(optimizer, milestones=[int(0.6 * num_epochs), int(0.8 * num_epochs)], gamma=0.1)
+    # lr_scheduler = MultiStepLR(optimizer, milestones=[int(0.6 * num_epochs), int(0.8 * num_epochs)], gamma=0.1)
+    # lr_scheduler = MultiStepLR(optimizer, milestones=[int(0.6 * num_epochs), int(0.8 * num_epochs)], gamma=0.1)
+    lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, num_epochs)
     feature_criterion = BatchHardTripletLoss(margin=margin)
 
     best_recall = 0.0
@@ -143,7 +145,9 @@ if __name__ == '__main__':
         results['train_accuracy'].append(train_accuracy)
         rank = test(model, recalls)
         lr_scheduler.step()
-
+        if epoch < 3:
+            for g in optim.param_groups:
+                g['lr'] = g['lr'] / num_epochs
         # save statistics
         data_frame = pd.DataFrame(data=results, index=range(1, epoch + 1))
         data_frame.to_csv('results/{}_statistics.csv'.format(save_name_pre), index_label='epoch')
