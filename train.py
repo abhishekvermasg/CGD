@@ -13,10 +13,10 @@ from pytorch_metric_learning import losses, miners, distances, reducers, testers
 from model import Model, set_bn_eval
 from utils import recall, LabelSmoothingCrossEntropyLoss, BatchHardTripletLoss, ImageReader, MPerClassSampler
 
-torch.backends.cudnn.benchmark = True
-torch.autograd.set_detect_anomaly(True)
-torch.autograd.profiler.profile(True)
-torch.autograd.profiler.emit_nvtx(True)
+# torch.backends.cudnn.benchmark = True
+# torch.autograd.set_detect_anomaly(True)
+# torch.autograd.profiler.profile(True)
+# torch.autograd.profiler.emit_nvtx(True)
 
 def train(net, optim, loss_type=None):
     net.train()
@@ -134,7 +134,7 @@ if __name__ == '__main__':
     print('# Model Params: {} FLOPs: {}'.format(params, flops))
     if opt.class_loss == 'arcface':
         class_criterion = losses.ArcFaceLoss(num_classes=len(train_data_set.class_to_idx), \
-            embedding_size=512, reducer=reducers.ThresholdReducer(low=0.1))
+            embedding_size=512) # , reducer=reducers.ThresholdReducer(low=0.1)
     elif opt.class_loss == 'contra':
         distance = distances.CosineSimilarity()
         class_criterion = losses.ContrastiveLoss(distance=distance)
@@ -154,9 +154,9 @@ if __name__ == '__main__':
 
     best_recall = 0.0
     for epoch in range(1, num_epochs + 1):
-        # if epoch < opt.warmup_epochs + 1:
-        #     for g in optimizer.param_groups:
-        #         g['lr'] = g['lr'] / num_epochs
+        if epoch < opt.warmup_epochs + 1:
+            for g in optimizer.param_groups:
+                g['lr'] = g['lr'] / num_epochs
         train_loss, train_accuracy = train(model, optimizer, loss_type='arcface')
         results['train_loss'].append(train_loss)
         results['train_accuracy'].append(train_accuracy)
