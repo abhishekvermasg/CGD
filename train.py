@@ -113,7 +113,7 @@ if __name__ == '__main__':
 
     # model setup, model profile, optimizer config and loss definition
     model = Model(backbone_type, gd_config, feature_dim, num_classes=len(train_data_set.class_to_idx)).cuda()
-    flops, params = profile(model, inputs=(torch.randn(1, 3, 224, 224).cuda(),))
+    flops, params = profile(model, inputs=(torch.randn(1, 3, 224, 224).cuda(),), verbose=False)
     flops, params = clever_format([flops, params])
     print('# Model Params: {} FLOPs: {}'.format(params, flops))
     optimizer = Adam(model.parameters(), lr=1e-4)
