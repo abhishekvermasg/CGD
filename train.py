@@ -89,6 +89,7 @@ if __name__ == '__main__':
     parser.add_argument('--feature_loss', default='bhtl', help='loss function for features')
     parser.add_argument('--data_dir', default='../input/shopee-product-matching/train_images/',\
      type=str, help='train images folder')
+    parser.add_argumnet('--warmup_epochs', default=2, help='number of warmup epochs')
 
 
     opt = parser.parse_args()
@@ -145,7 +146,7 @@ if __name__ == '__main__':
         results['train_accuracy'].append(train_accuracy)
         rank = test(model, recalls)
         lr_scheduler.step()
-        if epoch < 3:
+        if epoch < opt.warmup_epochs + 1:
             for g in optim.param_groups:
                 g['lr'] = g['lr'] / num_epochs
         # save statistics
